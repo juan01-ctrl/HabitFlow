@@ -99,7 +99,7 @@ export default function TrackingPage() {
   };
 
   return (
-    <div className='p-6'>
+    <div className='p-6 container'>
       <div className='lg:flex gap-6'>
         <div className='lg:w-2/3 mt-6 mb-8'>
           <h1 className='mb-6 -ms-2'>📊Habit Tracking</h1>

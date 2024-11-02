@@ -38,9 +38,7 @@ export default async function RootLayout({
       >
         <Providers session={session}>
           <Navbar />
-          <div className="max-w-[1024px] mx-auto">
-            {children}
-          </div>
+          {children}
         </Providers>
         <Toaster />
       </body>

@@ -120,7 +120,7 @@ export default function Habits() {
     }
   }
   return (
-    <div className="p-6">
+    <div className="p-6 container">
       <div className="flex w-full items-center justify-between mb-2">
         <h1 className="-ms-2 mb-6">📝My Habits</h1>
         <Button color="primary" onClick={onOpen}>
