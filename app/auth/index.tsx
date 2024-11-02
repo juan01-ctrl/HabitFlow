@@ -14,7 +14,7 @@ interface Props {
   title: string
   subtitle?: string
   btnText: string
-  onSubmit: (payload: any) => void
+  onSubmit: (payload: unknown) => void
   redirect: {
     ask: string,
     link: string,

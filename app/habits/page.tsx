@@ -13,7 +13,6 @@ import dayjs from "dayjs";
 
 import {DeleteIcon} from "@/app/components/DeleteIcon";
 import {EditIcon}   from "@/app/components/EditIcon";
-import {EyeIcon}    from "@/app/components/EyeIcon";
 
 import { IHabit } from "../models/Habit";
 
