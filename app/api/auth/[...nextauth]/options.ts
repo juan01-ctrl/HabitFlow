@@ -20,7 +20,6 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/auth/sign-in'
   },
-  // Configure one or more authentication providers
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
