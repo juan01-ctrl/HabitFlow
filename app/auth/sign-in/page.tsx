@@ -3,6 +3,7 @@
 import Link       from 'next/link'
 import { signIn } from 'next-auth/react'
 
+import { IUser }         from '@/app/models/User'
 import { AUTH, TRACKER } from '@/enums/paths'
 
 import AuthLayout from '../'
@@ -24,11 +25,10 @@ function SignIn () {
     }
   ]
 
-  const onSubmit = async (payload: SubmitEvent) => {
-    const credentialsSignIn = await signIn('credentials', {
+  const onSubmit = async (payload: Partial<IUser>) => {
+    await signIn('credentials', {
       ...payload, callbackUrl: TRACKER.ROOT
     })
-    console.log({ credentialsSignIn })
   }
 
   return (

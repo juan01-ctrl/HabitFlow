@@ -4,7 +4,8 @@ import { Checkbox }  from '@nextui-org/react'
 import axios         from 'axios'
 import { useRouter } from 'next/navigation'
 
-import { AUTH } from '@/enums/paths'
+import { IUser } from '@/app/models/User'
+import { AUTH }  from '@/enums/paths'
 
 import AuthLayout from '../'
 
@@ -38,11 +39,10 @@ const inputs = [
 
 function SignUp () {
   const router = useRouter()
-  const onSubmit = async (payload) => {
+  const onSubmit = async (payload: Partial<IUser>) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { confirmPassword, ...rest } = payload
 
-    await axios.post('/api/user', rest)
+    await axios.post('/api/user', payload)
       .then(() => router.push(AUTH.SIGN_IN))
       .catch((error) => { console.log({ SignUpError: error }) })
   }

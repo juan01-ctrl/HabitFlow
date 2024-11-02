@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { compare }                                     from 'bcrypt'
-import NextAuth, { getServerSession, NextAuthOptions } from 'next-auth'
-import CredentialsProvider                             from 'next-auth/providers/credentials'
-import GoogleProvider                                  from 'next-auth/providers/google'
+import { compare }                                              from 'bcrypt'
+import NextAuth, { getServerSession, NextAuthOptions, Profile } from 'next-auth'
+import CredentialsProvider                                      from 'next-auth/providers/credentials'
+import GoogleProvider                                           from 'next-auth/providers/google'
 
 import User      from '@/app/models/User'
 import dbConnect from '@/lib/dbConnect'
@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
           response_type: 'code'
         }
       },
-      profile: async (profile) => {
+      profile: async (profile: Profile) => {
         const account = await authService.signInWithGoogle(profile!)
         return ({
           id: account._id,
@@ -67,6 +67,7 @@ export const authOptions: NextAuthOptions = {
             email: existingUser.email
           }
         } catch (error) {
+          console.log(error)
           return null
         }
       },

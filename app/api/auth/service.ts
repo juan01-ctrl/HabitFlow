@@ -1,3 +1,5 @@
+import { Profile } from "next-auth"
+
 import User      from "@/app/models/User"
 import dbConnect from "@/lib/dbConnect"
 
@@ -37,7 +39,7 @@ export default class AuthService {
   //     return user
   //   }
 
-  async signInWithGoogle(googleProfile) {
+  async signInWithGoogle(googleProfile: Profile) {
     await dbConnect()
 
     console.log({googleProfile})

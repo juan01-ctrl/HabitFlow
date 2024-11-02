@@ -7,6 +7,8 @@ import classNames                                         from 'classnames'
 import Link                                               from 'next/link'
 import { ChangeEvent, FormEvent, ReactElement, useState } from 'react'
 
+import { IUser } from '../models/User'
+
 import GoogleBtn from './components/Buttons/GoogleBtn'
 
 interface Props {
@@ -14,7 +16,7 @@ interface Props {
   title: string
   subtitle?: string
   btnText: string
-  onSubmit: (payload: unknown) => void
+  onSubmit: (payload: Partial<IUser>) => void
   redirect: {
     ask: string,
     link: string,
@@ -29,7 +31,9 @@ function AuthLayout ({
   extraActionComponent, redirect,
   withoutGoogleAuth, onSubmit
 }: Props) {
-  const [payload, setPayload] = useState({})
+  const [payload, setPayload] = useState<
+    Partial<IUser & { confirmPassword: string }>
+  >({})
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -41,7 +45,9 @@ function AuthLayout ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    onSubmit(payload)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...rest} = payload
+    onSubmit(rest)
   }
 
   return (
