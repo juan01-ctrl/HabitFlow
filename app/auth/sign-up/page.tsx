@@ -8,6 +8,7 @@ import { IUser } from '@/app/models/User'
 import { AUTH }  from '@/enums/paths'
 
 import AuthLayout from '../'
+import toast from 'react-hot-toast'
 
 
 const inputs = [
@@ -28,13 +29,13 @@ const inputs = [
     type: 'password',
     name: 'password',
     label: 'Password'
-  },
-  {
-    isRequired: true,
-    type: 'password',
-    name: 'confirmPassword',
-    label: 'Confirm Password'
   }
+  // {
+  //   isRequired: true,
+  //   type: 'password',
+  //   name: 'confirmPassword',
+  //   label: 'Confirm Password'
+  // }
 ]
 
 function SignUp () {
@@ -43,20 +44,23 @@ function SignUp () {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
     await axios.post('/api/user', payload)
-      .then(() => router.push(AUTH.SIGN_IN))
+      .then(() => {
+        toast.success('Created successfully')
+        router.push(AUTH.SIGN_IN)
+      })
       .catch((error) => { console.log({ SignUpError: error }) })
   }
 
   return (
     <AuthLayout
       inputs={inputs}
-      extraActionComponent={
-        <Checkbox size="sm" className="text-xs">
-          <span className="text-xs text-black">
-            I accept privacy policies
-          </span>
-        </Checkbox>
-      }
+      // extraActionComponent={
+      //   <Checkbox size="sm" className="text-xs">
+      //     <span className="text-xs text-black">
+      //       I accept privacy policies
+      //     </span>
+      //   </Checkbox>
+      // }
       title="Create your account"
       subtitle="Create your account and start the adventure."
       redirect={{

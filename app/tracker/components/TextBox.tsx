@@ -152,11 +152,11 @@ export default function TextBox ({ content, setContent, isLoading }) {
         }}
         content={content || defaultContent}
       />
-      <div className='absolute right-4' style={{ bottom: '265px'}}>
+      <div className='absolute right-2' style={{ bottom: '270px'}}>
         { 
           isLoading 
             ? <Spinner size='sm' />
-            :<CheckCircleIcon className='text-success' width={22} />
+            :<CheckCircleIcon className='text-success opacity-50' width={22} />
         }
       </div>
     </div>

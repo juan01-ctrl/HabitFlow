@@ -46,11 +46,12 @@ export const authOptions: NextAuthOptions = {
           await dbConnect()
 
           const { email, password } = credentials || {}
+          console.log({credentials})
           if (!email || !password) { return null }
           
-          const existingUser = await User.findOne({
-            where: { email: credentials?.email }
-          })
+          const existingUser = await User.findOne({ email: credentials?.email  })
+
+          console.log({existingUser})
 
           if (!existingUser) {
             return null

@@ -40,7 +40,7 @@ function SignIn () {
         linkText: 'Sign up for free'
       }}
       inputs={inputs}
-      extraActionComponent={<Link href={AUTH.FORGOT_PASSWORD} className="text-xs float-end">Forgot Password?</Link>}
+      // extraActionComponent={<Link href={AUTH.FORGOT_PASSWORD} className="text-xs float-end">Forgot Password?</Link>}
       title="Welcome back!"
       subtitle="Welcome back! Please enter your details."
       btnText="Log In"
