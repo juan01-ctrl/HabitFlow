@@ -1,14 +1,14 @@
 'use client'
 
-import { Checkbox }  from '@nextui-org/react'
+// import { Checkbox }  from '@nextui-org/react'
 import axios         from 'axios'
 import { useRouter } from 'next/navigation'
+import toast         from 'react-hot-toast'
 
 import { IUser } from '@/app/models/User'
 import { AUTH }  from '@/enums/paths'
 
 import AuthLayout from '../'
-import toast from 'react-hot-toast'
 
 
 const inputs = [

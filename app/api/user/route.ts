@@ -1,8 +1,9 @@
 // app/api/users/route.js
-import User from '@/app/models/User';
-import dbConnect from '@/lib/dbConnect'; // adjust the import path based on your structure
-import bcrypt from 'bcrypt';
+import bcrypt                        from 'bcrypt';
 import { NextRequest, NextResponse } from 'next/server';
+
+import User      from '@/app/models/User';
+import dbConnect from '@/lib/dbConnect'; // adjust the import path based on your structure
 
 export async function POST(req: NextRequest) {
   try {
