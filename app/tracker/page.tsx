@@ -37,7 +37,7 @@ export default function TrackingPage() {
   const debouncedValue = useDebounced(content, 500)
 
   const { data: note, refetch, isLoading: isLoadingNote } = useGetNoteByDate({ params: { date: noteDate } })
-  const { data: habits = [], isFetching: isLoading } = useGetHabits();
+  const { data: habits = [], isLoading: isLoading } = useGetHabits();
   const { mutate: update } = useUpdateHabit();
   
   const { mutate: updateNote, isPending: isLoadingUpdateNote } = useUpdateNote(refetch)

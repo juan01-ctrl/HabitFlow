@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import Note      from "@/app/models/Notes";
+import Note      from "@/app/models/Note";
 import dbConnect from "@/lib/dbConnect";
 import dayjs     from "@/utils/dayjsConfig";
 

@@ -14,7 +14,6 @@ export const useUpdateHabit = (onSuccess?: () => void) => {
     onSuccess: () => {
       onSuccess?.()
       refetchHabits(queryClient)
-      toast.success('Updated successfully')
     },
     onError: () => toast.error('Ops! Something went wrong')
   })
