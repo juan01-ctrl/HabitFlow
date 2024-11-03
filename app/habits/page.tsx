@@ -130,7 +130,7 @@ export default function Habits() {
           {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
         </TableHeader>
         <TableBody
-          items={data}
+          items={data || []}
           isLoading={isFetching}
           loadingContent={<Spinner label='Loading...' />}
         >
