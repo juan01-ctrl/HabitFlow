@@ -5,15 +5,12 @@ import {
 } from "@nextui-org/react";
 import { usePathname }         from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { useTheme }            from "next-themes";
 
 import { AUTH, TRACKER, HABITS, PROGRESS } from "@/enums/paths";
 
 import { ThemeSwitcher } from "./ThemeSwitcher";
 
 export default function Navbar() {
-  const { theme } = useTheme()
-
   const { status } = useSession()
   const pathname = usePathname()
 
