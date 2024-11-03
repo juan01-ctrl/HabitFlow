@@ -18,6 +18,7 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
 }
 
 h1 {
@@ -163,4 +164,18 @@ h6 {
   padding: 1rem;
   border-radius: 8px;
   outline: none;
+}
+
+.dark {
+  .ProseMirror{
+    background-color: #27272A ;
+  }
+  .bg-white {
+    background-color: #1a1919;
+  }
+
+
+  .text-black {
+    color: #fff
+  }
 }

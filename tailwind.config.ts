@@ -21,6 +21,19 @@ const config: Config = {
       },
     },
   },
-  plugins: [nextui()],
+  plugins: [nextui({
+    addCommonColors: true,
+    themes:{
+      light: {
+        colors: {
+        }
+      } ,
+      dark: {
+        colors: {
+          background: '#0d0d0d',
+        }
+      }
+    }
+  })],
 };
 export default config;

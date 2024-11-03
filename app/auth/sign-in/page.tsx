@@ -10,6 +10,7 @@ import AuthLayout from '../'
 
 
 function SignIn () {
+  
   const inputs = [
     {
       isRequired: true,

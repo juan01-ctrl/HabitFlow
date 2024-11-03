@@ -11,11 +11,13 @@ import OrderedList                          from '@tiptap/extension-ordered-list
 import TextStyle                            from '@tiptap/extension-text-style'
 import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit                           from '@tiptap/starter-kit'
+import { useTheme }                         from 'next-themes'
 import React, {  useState }                 from 'react'
 
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor()
+  const { theme } = useTheme()
   const [viewAll, setViewAll] = useState(false)
 
   if (!editor) {
@@ -105,7 +107,13 @@ const MenuBar = () => {
               size='sm'
               onClick={item.onClick}
               disabled={item?.disabled}
-              className={`${item?.className || (editor.isActive(item?.label || item.name) ? 'bg-primary text-white ' : 'bg-primary-100 text-gray-700 ')}capitalize`}
+              className={
+                `${item?.className || 
+                  (editor.isActive(item?.label || item.name)
+                    ? 'bg-primary text-white' 
+                    : `bg-primary-200 ${theme === "light" ? "text-gray-700" : "text-white"}`)
+                } capitalize`
+              }
             >
               {item.name}
             </Button>
