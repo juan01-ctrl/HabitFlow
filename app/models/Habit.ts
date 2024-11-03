@@ -28,10 +28,6 @@ const habitSchema = new Schema({
     type: [String],
     enum: WEEK_DAYS,
   },
-  records: [{ 
-    date: { type: Date, required: true },
-    completed: { type: Boolean, default: false }, 
-  }],
   startDate: {
     type: Date, 
     required: true

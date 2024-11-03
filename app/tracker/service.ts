@@ -1,5 +1,8 @@
 import axios from "axios";
 
+import { INote }   from "../models/Note";
+import { IRecord } from "../models/Record";
+
 
 export const getNoteByDate = ({ 
   params
@@ -9,10 +12,20 @@ export const getNoteByDate = ({
 
 export const createNote = ({ 
   body
-}) => axios.post('/api/notes', body)
+}: { body: INote }) => axios.post('/api/notes', body)
   
 
 export const updateNote = ({ 
   body
-}) => axios.patch('/api/notes', body)
+}: { body: Partial<INote> }) => axios.patch('/api/notes', body)
+
+
+export const createRecord = ({ 
+  body
+}: { body: IRecord }) => axios.post('/api/records', body)
+  
+
+export const updateRecord = ({ 
+  body
+}: { body: Partial<IRecord> }) => axios.patch('/api/records', body)
     

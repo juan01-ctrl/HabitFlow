@@ -1,12 +1,15 @@
 import axios from "axios";
 
-import { IHabit } from "../models/Habit";
+import { IHabit }  from "../models/Habit";
+import { IRecord } from "../models/Record";
+
+export type IGetHabitsResponseItem = IHabit & { records: IRecord[] }
 
 export const createHabit = ({ body }: {
     body: Partial<IHabit>
 }) => axios.post('/api/habits', body)
 
-export const getHabits = (): Promise<IHabit[]> => axios.get('/api/habits')
+export const getHabits = (): Promise<IGetHabitsResponseItem[]> => axios.get('/api/habits')
   .then(({ data }) => data)
 
 export const deleteHabit = ({ _id }: {

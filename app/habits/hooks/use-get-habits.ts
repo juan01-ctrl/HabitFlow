@@ -8,7 +8,7 @@ export const useGetHabits = () => useQuery({
   queryFn: getHabits,
   queryKey,
   staleTime: 60 * 60 * 1000,
-  placeholderData: [],
+  // placeholderData: [],
   retry: 3
 })
 

@@ -8,7 +8,7 @@ import { useDeleteHabit } from "../hooks/use-delete-habit";
 interface Props {
     onOpenChange: () => void
     isOpen: boolean
-    id: string
+    _id: string
 }
 
 export function DeleteHabitModal ({ onOpenChange, isOpen, _id }: Props) {

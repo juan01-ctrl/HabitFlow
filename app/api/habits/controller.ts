@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 import Habit, { IHabit } from "@/app/models/Habit";
 
 export async function createHabit(data: Partial<IHabit>) {
@@ -6,7 +8,21 @@ export async function createHabit(data: Partial<IHabit>) {
 }
 
 export const getHabits = async (userId: string) => {
-  return Habit.find({ userId }).exec(); 
+  const objectIdUserId = new Types.ObjectId(userId);
+
+  const habits = await Habit.aggregate([
+    { $match: { userId: objectIdUserId } },
+    {
+      $lookup: {
+        from: 'records',         
+        localField: '_id',       
+        foreignField: 'habitId', 
+        as: 'records'     
+      }
+    }
+  ]);
+  
+  return habits;
 };
 
 export const updateHabit = async (_id: string, updates: Partial<IHabit>) => {

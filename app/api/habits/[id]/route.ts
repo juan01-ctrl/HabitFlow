@@ -38,7 +38,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<Params> 
 export async function DELETE(_req: Request, { params }: { params: Promise<Params> }) {
   try {
     await dbConnect();
-
+  
     const session = await getSession();
     const userId = session?.user?.id;
   

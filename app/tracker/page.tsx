@@ -15,15 +15,16 @@ const DatePicker = dynamic(() => import('@nextui-org/react').then((mod) => mod.D
 
 import dayjs from '@/utils/dayjsConfig';
 
-import { useGetHabits }   from '../habits/hooks/use-get-habits';
-import { useUpdateHabit } from '../habits/hooks/use-update-habit';
-import { useDebounced }   from '../hooks/useDebounce';
-import { IHabit }         from '../models/Habit';
+import { useGetHabits }           from '../habits/hooks/use-get-habits';
+import { IGetHabitsResponseItem } from '../habits/service';
+import { useDebounced }           from '../hooks/useDebounce';
 
 import TextBox              from './components/TextBox';
 import { useCreateNote }    from './hooks/use-create-note';
+import { useCreateRecord }  from './hooks/use-create-record';
 import { useGetNoteByDate } from './hooks/use-get-note-by-date';
 import { useUpdateNote }    from './hooks/use-update-note';
+import { useUpdateRecord }  from './hooks/use-update-record';
 
 const days = ['Sun','Mon','Tue','Wed','Thu','Fri', 'Sat'];
 
@@ -34,14 +35,15 @@ export default function TrackingPage() {
   const [noteKey, setNoteKey] = useState(0);
   
 
-  const debouncedValue = useDebounced(content, 500)
+  const debouncedValue = useDebounced(content, 500) as string
 
-  const { data: note, refetch, isLoading: isLoadingNote } = useGetNoteByDate({ params: { date: noteDate } })
-  const { data: habits = [], isLoading: isLoading } = useGetHabits();
-  const { mutate: update } = useUpdateHabit();
+  const { data: note, refetch: refetchNote, isLoading: isLoadingNote } = useGetNoteByDate({ params: { date: noteDate } })
+  const { data: habits , isLoading: isLoading, refetch: refetchHabits } = useGetHabits();
+  const { mutate: updateRecord } = useUpdateRecord(refetchHabits)
+  const { mutate: createRecord } = useCreateRecord(refetchHabits)
   
-  const { mutate: updateNote, isPending: isLoadingUpdateNote } = useUpdateNote(refetch)
-  const { mutate: createNote } = useCreateNote(refetch)
+  const { mutate: updateNote, isPending: isLoadingUpdateNote } = useUpdateNote(refetchNote)
+  const { mutate: createNote } = useCreateNote(refetchNote)
 
   useEffect(() => {
     const noteContent = note?.content || ''
@@ -63,30 +65,30 @@ export default function TrackingPage() {
   
 
   const handleCheckboxChange = (
-    e: ChangeEvent<HTMLInputElement>, habit: IHabit, date: Date
+    e: ChangeEvent<HTMLInputElement>, habit: IGetHabitsResponseItem, date: Date
   ) => {
     const completed = e.target.checked;
 
-    const alreadyExist = habit.records.some((record) => dayjs(record.date).isSame(date));
+    const record = habit.records.find((record) => dayjs(record.date).isSame(date));
+    const habitId = habit._id
 
-    const updatedRecords = habit.records.map((record) =>
-      dayjs(record.date).isSame(date) ? { ...record, completed } : record
-    );
-
-    if (!alreadyExist) {
-      updatedRecords.push({ date: date, completed });
+    if (record) {
+      const body = { habitId, completed, _id: record._id  }
+  
+      updateRecord({ body });
+    } else {
+      createRecord({ body: { date, completed, habitId }})
     }
 
-    update({ _id: habit._id, body: { records: updatedRecords } });
   };
 
   const currentDate = dayjs.utc().startOf('day');
   const weekDates = [...Array(7)].map((_, index) => startOfWeek.add(index, 'day').toISOString());
   const isLastWeek = currentDate.startOf('week').isSame(startOfWeek);
 
-  const calculateCompletionPercentage = (habit: IHabit) => {
-    const target = habit.daysPerWeek; 
-    const completedDays = habit.records
+  const calculateCompletionPercentage = (habit: IGetHabitsResponseItem) => {
+    const target = habit?.daysPerWeek || 0; 
+    const completedDays = (habit?.records || [])
       .filter((record) => record.completed && weekDates.includes(dayjs(record.date).toISOString())).length; 
     return  ((completedDays / target) * 100).toFixed(2); 
   };
@@ -130,8 +132,9 @@ export default function TrackingPage() {
             <TableBody 
               loadingContent={<Spinner label='Loading...' />}
               isLoading={isLoading}
+              emptyContent={"No habits to display."}
             >
-              {habits.map((habit) => {
+              {(habits || [])?.map((habit) => {
                 const completionPercentage = Number(calculateCompletionPercentage(habit));
                 let color = 'success';
 
@@ -143,22 +146,24 @@ export default function TrackingPage() {
                 return (
                   <TableRow key={habit._id}>
                     <TableCell>{habit.name}</TableCell>
-                    {weekDates.map((date) => {
-                      const record = habit.records.find((record) => dayjs(record.date).isSame(date));
+                    {
+                      weekDates.map((date) => {
+                        const record = habit.records.find((record) => dayjs(record.date).isSame(date));
 
-                      return (
-                        <TableCell 
-                          key={date}
-                          className={`${habit?.specificDays.includes(dayjs.utc(date).format('dddd')) ? 'bg-primary-100': ''}`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={record ? record.completed : false}
-                            onChange={(e) => handleCheckboxChange(e, habit, date)}
-                          />
-                        </TableCell>
-                      );
-                    })}
+                        return (
+                          <TableCell 
+                            key={date}
+                            className={`${habit?.specificDays.includes(dayjs.utc(date).format('dddd')) ? 'bg-primary-100': ''}`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={record ? record.completed : false}
+                              onChange={(e) => handleCheckboxChange(e, habit, date)}
+                            />
+                          </TableCell>
+                        );
+                      })
+                    }
                     <TableCell className={`bg-${color} text-white`}>
                       {completionPercentage}%
                     </TableCell>

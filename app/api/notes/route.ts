@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   try {
     const session = await getSession();
     const userId = session?.user?.id;
-
+  
     if (!userId) {
       return NextResponse.json({
         message: "User not authenticated."

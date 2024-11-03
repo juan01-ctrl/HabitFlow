@@ -12,6 +12,7 @@ export async function GET() {
     await dbConnect()
     const session = await getSession();
     const userId = session?.user?.id;
+
   
     if (!userId) {
       return NextResponse.json({
@@ -31,8 +32,14 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const session = await getSession()
-
+  
     const userId = session?.user?.id
+    
+    if (!userId) {
+      return NextResponse.json({
+        message: "User not authenticated."
+      }, { status: 401 });
+    }
 
     const body = await request.json();
 

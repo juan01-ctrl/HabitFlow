@@ -14,11 +14,10 @@ import dayjs from "dayjs";
 import {DeleteIcon} from "@/app/components/DeleteIcon";
 import {EditIcon}   from "@/app/components/EditIcon";
 
-import { IHabit } from "../models/Habit";
-
-import { DeleteHabitModal } from "./components/DeleteHabitModal";
-import { HabitForm }        from "./components/HabitForm";
-import { useGetHabits }     from "./hooks/use-get-habits";
+import { DeleteHabitModal }       from "./components/DeleteHabitModal";
+import { HabitForm }              from "./components/HabitForm";
+import { useGetHabits }           from "./hooks/use-get-habits";
+import { IGetHabitsResponseItem } from "./service";
 
 
 const columns = [
@@ -52,7 +51,7 @@ const columns = [
   }
 ];
 
-function Actions  ({ habit }) {
+function Actions  ({ habit }: { habit: IGetHabitsResponseItem }) {
   const {
     isOpen: isOpenForm, onOpen: onOpenForm, onOpenChange: onOpenChangeForm
   } = useDisclosure()
@@ -97,7 +96,7 @@ export default function Habits() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const { data, isFetching } = useGetHabits()
       
-  const getFormattedValue = (item: IHabit, columnKey: string | number) => {
+  const getFormattedValue = (item: IGetHabitsResponseItem, columnKey: string | number) => {
     switch (columnKey) {
     case 'startDate':
       return dayjs(item.startDate).format('MMMM D, YYYY')
@@ -135,7 +134,7 @@ export default function Habits() {
           isLoading={isFetching}
           loadingContent={<Spinner label='Loading...' />}
         >
-          {(item: IHabit) => (
+          {(item) => (
             <TableRow key={item._id}>
               {
                 (columnKey) => <TableCell>
