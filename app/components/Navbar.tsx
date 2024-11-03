@@ -57,7 +57,7 @@ export default function Navbar() {
         {
           isAuthenticated 
             ? 
-            <>
+            <div className="flex items-center gap-4">
               <NavbarItem>
                 <ThemeSwitcher />
               </NavbarItem>
@@ -66,7 +66,7 @@ export default function Navbar() {
                   Logout
                 </Button>
               </NavbarItem>
-            </>
+            </div>
             :
             <>
               <NavbarItem className="hidden lg:flex">
