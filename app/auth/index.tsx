@@ -51,9 +51,9 @@ function AuthLayout ({
   }
 
   return (
-    <div className="flex h-[100vh] w-full items-center justify-center bg-primary">
+    <div className="flex h-[100vh] w-full items-center justify-center bg-primary px-8">
       <Card className='bg-white text-black rounded-md'>
-        <CardBody className="p-8 w-[28rem]">
+        <CardBody className="p-8 w-[28rem] max-w-full">
           <div className="h-full flex flex-col">
             <div className="grow w-full flex flex-col items-center justify-center">
               <div className="max-w-[30rem]">

@@ -26,10 +26,10 @@ import { useGetNoteByDate } from './hooks/use-get-note-by-date';
 import { useUpdateNote }    from './hooks/use-update-note';
 import { useUpdateRecord }  from './hooks/use-update-record';
 
-const days = ['Sun','Mon','Tue','Wed','Thu','Fri', 'Sat'];
+const days = ['Mon','Tue','Wed','Thu','Fri', 'Sat', 'Sun'];
 
 export default function TrackingPage() {
-  const [startOfWeek, setStartOfWeek] = useState(dayjs.utc().startOf('week'));
+  const [startOfWeek, setStartOfWeek] = useState(dayjs().startOf('week').subtract(6, 'day'));
   const [content, setContent] = useState('');
   const [noteDate, setNoteDate] = useState(dayjs.utc().startOf('day').toISOString());
   const [noteKey, setNoteKey] = useState(0);
@@ -77,12 +77,12 @@ export default function TrackingPage() {
   
       updateRecord({ body });
     } else {
-      createRecord({ body: { date, completed, habitId }})
+      createRecord({ body: { date: dayjs.utc(date), completed, habitId }})
     }
 
   };
 
-  const currentDate = dayjs.utc().startOf('day');
+  const currentDate = dayjs().startOf('day');
   const weekDates = [...Array(7)].map((_, index) => startOfWeek.add(index, 'day').toISOString());
   const isLastWeek = currentDate.startOf('week').isSame(startOfWeek);
 
@@ -94,11 +94,12 @@ export default function TrackingPage() {
   };
 
   const handlePrevWeek = () => {
-    setStartOfWeek(startOfWeek.subtract(1, 'week'));
+    setStartOfWeek(startOfWeek.subtract(7, 'day'));
   };
   const handleNextWeek = () => {
-    setStartOfWeek(startOfWeek.add(1, 'week'));
+    setStartOfWeek(startOfWeek.add(7, 'day'));
   };
+
 
   return (
     <div className='p-6 container'>
@@ -110,7 +111,7 @@ export default function TrackingPage() {
               <ArrowLeftIcon width={18} />
               <span>Previous</span>
             </Button>
-            <span className='text-gray-600'>{startOfWeek.format('MMM D')} - {startOfWeek.endOf('week').format('MMM D')}</span>
+            <span className='text-gray-600'>{startOfWeek.format('MMM D')} - {startOfWeek.add(6, 'day').format('MMM D')}</span>
             <Button isDisabled={isLastWeek} onClick={handleNextWeek} className='flex items-center gap-2 cursor-pointer bg-primary-400 text-white'>
               <span>Next</span>
               <ArrowRightIcon width={18} />
@@ -119,14 +120,16 @@ export default function TrackingPage() {
           <Table className='mt-4'>
             <TableHeader>
               <TableColumn>Habit</TableColumn>
-              {days?.map((day, idx) => (
-                <TableColumn 
-                  key={day}
-                  className={dayjs(weekDates[idx]).isSame(currentDate) ? 'bg-primary text-white' : ''}
-                >
-                  {day}
-                </TableColumn>
-              ))}
+              {
+                days?.map((day, idx) => (
+                  <TableColumn 
+                    key={day}
+                    className={dayjs(weekDates[idx]).isSame(currentDate) ? 'bg-primary text-white' : ''}
+                  >
+                    {day}
+                  </TableColumn>
+                ))
+              }
               <TableColumn>Completion (%)</TableColumn>
             </TableHeader>
             <TableBody 
@@ -157,7 +160,7 @@ export default function TrackingPage() {
                           >
                             <input
                               type="checkbox"
-                              checked={record ? record.completed : false}
+                              checked={record ? record?.completed : false}
                               onChange={(e) => handleCheckboxChange(e, habit, date)}
                             />
                           </TableCell>

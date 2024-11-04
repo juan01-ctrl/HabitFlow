@@ -1,7 +1,10 @@
 'use client'
 
 import {
-  Navbar as NextNavbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button
+  Navbar as NextNavbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle
 } from "@nextui-org/react";
 import { usePathname }         from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -31,6 +34,8 @@ export default function Navbar() {
     } 
   ]
 
+
+  console.log(isAuthenticated)
 
   return (
     <NextNavbar className="bg-white text-black shadow-lg">
@@ -63,15 +68,15 @@ export default function Navbar() {
               </NavbarItem>
               <NavbarItem className="hidden lg:flex">
                 <Button  color='primary' onClick={() => signOut()} >
-                  Logout
+                  Log Out
                 </Button>
               </NavbarItem>
             </div>
             :
             <>
-              <NavbarItem className="hidden lg:flex">
+              <NavbarItem className="lg:flex">
                 <Button as={Link} color="primary" href={AUTH.SIGN_IN} variant="bordered">
-                  Login
+                  Log In
                 </Button>
               </NavbarItem>
               <NavbarItem>
@@ -82,6 +87,31 @@ export default function Navbar() {
             </>
         }
       </NavbarContent>
+      {
+        isAuthenticated &&
+          <>
+            <NavbarMenuToggle
+              className="sm:hidden"
+            />
+            <NavbarMenu>
+              {
+                navLinks.map((item, index) => (
+                  <NavbarMenuItem key={`${item}-${index}`}>
+                    <Link
+                      color={
+                        item?.href === pathname ? "primary" :  "foreground"
+                      }
+                      className="w-full cursor-pointer"
+                      href={item?.href}
+                      size="lg"
+                    >
+                      {item.name}
+                    </Link>
+                  </NavbarMenuItem>
+                ))}
+            </NavbarMenu>
+          </>
+      }
     </NextNavbar>
   );
 }
