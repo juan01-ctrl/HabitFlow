@@ -1,6 +1,6 @@
 {
     "crons": [{
       "path": "/api/cron/statistics/completion",
-      "schedule": "0 0 * * 1"
-    }]
-  }
+      "schedule": "*/10 * * * *" 
+      }]
+}
