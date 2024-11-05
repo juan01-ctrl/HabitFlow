@@ -30,7 +30,10 @@ export async function createStatistics() {
         {
           $match: {
             userId: new Types.ObjectId(userId),
-            date: { $gte: lastWeekStart, $lte: lastWeekEnd }
+            date: { 
+              // $gte: lastWeekStart,
+              $lte: lastWeekEnd 
+            }
           },
         },
         {
