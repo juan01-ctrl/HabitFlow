@@ -21,7 +21,7 @@ export function Providers({ session, children }: Props)  {
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <NextUIProvider>
-          <ThemeProvider attribute="class" defaultTheme="light">
+          <ThemeProvider attribute="class" defaultTheme="dark">
             {children}
           </ThemeProvider>
         </NextUIProvider>

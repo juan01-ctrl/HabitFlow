@@ -1,4 +1,3 @@
-// app/components/ThemeSwitcher.tsx
 "use client";
 
 import { MoonIcon, SunIcon }            from "@heroicons/react/24/outline";
@@ -16,13 +15,15 @@ export function ThemeSwitcher() {
 
   if(!mounted) return null
 
+  const handleThemeToggle = () => {
+    console.log('theme', theme)
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
   const handleSwitch = ({ isSelected, className }: SwitchThumbIconProps) => {
-    if(isSelected) {
-      setTheme('light')
-      return  <SunIcon className={`${className} p-0.5`}/>
-    } 
-    setTheme('dark')
-    return <MoonIcon className={`${className} p-0.5`} />
+    return isSelected
+      ? <SunIcon className={`${className} p-0.5`}/>
+      : <MoonIcon className={`${className} p-0.5`} />
     
   }
 
@@ -30,6 +31,7 @@ export function ThemeSwitcher() {
     <Switch
       className="pt-1"
       size="lg"
+      onChange={handleThemeToggle}
       defaultSelected={theme === 'light'}
       thumbIcon={handleSwitch}
     />

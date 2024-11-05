@@ -29,7 +29,7 @@ import { useUpdateRecord }  from './hooks/use-update-record';
 const days = ['Mon','Tue','Wed','Thu','Fri', 'Sat', 'Sun'];
 
 export default function TrackingPage() {
-  const [startOfWeek, setStartOfWeek] = useState(dayjs().startOf('week').subtract(6, 'day'));
+  const [startOfWeek, setStartOfWeek] = useState(dayjs().startOf('isoWeek'));
   const [content, setContent] = useState('');
   const [noteDate, setNoteDate] = useState(dayjs.utc().startOf('day').toISOString());
   const [noteKey, setNoteKey] = useState(0);
@@ -84,12 +84,15 @@ export default function TrackingPage() {
 
   const currentDate = dayjs().startOf('day');
   const weekDates = [...Array(7)].map((_, index) => startOfWeek.add(index, 'day').toISOString());
-  const isLastWeek = currentDate.startOf('week').isSame(startOfWeek);
+  const isLastWeek = currentDate.startOf('isoWeek').isSame(startOfWeek);
+
+  console.log(weekDates)
 
   const calculateCompletionPercentage = (habit: IGetHabitsResponseItem) => {
+    console.log({ habit })
     const target = habit?.daysPerWeek || 0; 
     const completedDays = (habit?.records || [])
-      .filter((record) => record.completed && weekDates.includes(dayjs(record.date).toISOString())).length; 
+      .filter((record) => record.completed && weekDates.includes(dayjs(record.date).startOf('day').toISOString())).length; 
     return  ((completedDays / target) * 100).toFixed(2); 
   };
 
@@ -151,7 +154,7 @@ export default function TrackingPage() {
                     <TableCell>{habit.name}</TableCell>
                     {
                       weekDates.map((date) => {
-                        const record = habit.records.find((record) => dayjs(record.date).isSame(date));
+                        const record = habit.records.find((record) => dayjs(record.date).startOf('day').isSame(date));
 
                         return (
                           <TableCell 
