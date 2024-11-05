@@ -103,7 +103,7 @@ export async function createStatistics() {
 
         if (!existingStatistic) {
           return Statistic.create({
-            week: record.week || lastWeekStart,
+            week: record?.week || lastWeekStart,
             completion: record?.completion || 0,
             habitId: habit._id,
             userId: userId
