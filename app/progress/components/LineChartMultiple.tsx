@@ -1,10 +1,12 @@
 "use client"
 
 import { Card, CardFooter, CardHeader }          from "@nextui-org/react"
+import dayjs                                     from "dayjs"
 import { TrendingUp }                            from "lucide-react"
+import { useIntl }                               from 'react-intl'
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
-import { CardContent, CardDescription, CardTitle } from "@/components/ui/card"
+import { CardContent, CardTitle } from "@/components/ui/card"
 import {
   ChartConfig,
   ChartContainer,
@@ -12,40 +14,59 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
+import { useGetStatistics } from "../hooks/use-get-statistics"
+
 export const description = "A multiple line chart"
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
+// const chartData = [
+//   { month: "January", desktop: 186, mobile: 80 },
+//   { month: "February", desktop: 305, mobile: 200 },
+//   { month: "March", desktop: 237, mobile: 120 },
+//   { month: "April", desktop: 73, mobile: 190 },
+//   { month: "May", desktop: 209, mobile: 130 },
+//   { month: "June", desktop: 214, mobile: 140 },
+// ]
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#000000",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#000000",
-  },
+const chartConfig: ChartConfig = {
+  
+  // test: {
+  //   label: "Desktop",
+  //   color: "#000000",
+  // },
+  // completion: {
+  //   label: "Completion",
+  //   color: "#000000",
+  // },
 } satisfies ChartConfig
 
 export function LineChartMultiple() {
+  const { formatNumber } = useIntl()
+  const { data = [] } = useGetStatistics()
+
+  const tableData = data?.map((stat) => ({
+    ...stat,
+    week: `${dayjs(stat.week).format('DD-MMM')} - ${dayjs(stat.week).add(7, 'day').format('DD-MMM')}`
+  }))
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const keys = [...(new Set(data?.flatMap(({ week, ...rest }) => ( Object.keys(rest) ))))]
+
+  console.log(keys)
+
+
+
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle className="mb-4">Your progress  (by week)</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            style={{ fontWeight: 'bold' }}
+            data={tableData}
             margin={{
               left: 12,
               right: 12,
@@ -53,27 +74,28 @@ export function LineChartMultiple() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="week"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              // tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Line
-              dataKey="desktop"
-              type="monotone"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={true}
+            <ChartTooltip 
+              cursor={false} 
+              content={<ChartTooltipContent 
+                formatter={(value, label) => `${label}: ${formatNumber(Number(value), { style: 'percent' })} `} />} 
             />
-            <Line
-              dataKey="mobile"
-              type="monotone"
-              stroke="var(--color-mobile)"
-              strokeWidth={2}
-              dot={true}
-            />
+            {
+              keys?.map((key) =>  <Line
+                key={key}
+                dataKey={key}
+                type="monotone"
+                stroke="#000000"
+                strokeWidth={2}
+                dot={true}
+              />)
+            }
+  
           </LineChart>
         </ChartContainer>
       </CardContent>

@@ -1,4 +1,7 @@
 import axios from "axios";
 
-export const getRecords = ({ params }) => axios
-  .get('/api/records', { params }).then(({ data }) => data) 
+// STATISTICS
+
+export const getStatistics = () => axios
+  .get('/api/statistics')
+  .then(({data}) => data)

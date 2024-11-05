@@ -6,6 +6,7 @@ import type { Session }                     from 'next-auth'
 import { SessionProvider }                  from 'next-auth/react'
 import { ThemeProvider }                    from "next-themes";
 import  { PropsWithChildren }               from 'react'
+import { IntlProvider }                     from 'react-intl'
 
 interface Props extends PropsWithChildren{
     session: Session | null
@@ -22,7 +23,9 @@ export function Providers({ session, children }: Props)  {
       <QueryClientProvider client={queryClient}>
         <NextUIProvider>
           <ThemeProvider attribute="class" defaultTheme="dark">
-            {children}
+            <IntlProvider locale='es'>
+              {children}
+            </IntlProvider>
           </ThemeProvider>
         </NextUIProvider>
       </QueryClientProvider>

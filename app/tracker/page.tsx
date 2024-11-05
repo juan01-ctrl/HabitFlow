@@ -38,7 +38,7 @@ export default function TrackingPage() {
   const debouncedValue = useDebounced(content, 500) as string
 
   const { data: note, refetch: refetchNote, isLoading: isLoadingNote } = useGetNoteByDate({ params: { date: noteDate } })
-  const { data: habits , isLoading: isLoading, refetch: refetchHabits } = useGetHabits();
+  const { data: habits , isLoading, refetch: refetchHabits } = useGetHabits();
   const { mutate: updateRecord } = useUpdateRecord(refetchHabits)
   const { mutate: createRecord } = useCreateRecord(refetchHabits)
   
@@ -70,6 +70,7 @@ export default function TrackingPage() {
     const completed = e.target.checked;
 
     const record = habit.records.find((record) => dayjs(record.date).isSame(date));
+    console.log({ record, records: habit.records, date })
     const habitId = habit._id
 
     if (record) {

@@ -1,5 +1,6 @@
 import {  Types } from 'mongoose';
 
+import Habit     from '@/app/models/Habit';
 import Record    from '@/app/models/Record';
 import Statistic from '@/app/models/Statistic';
 import User      from '@/app/models/User';
@@ -15,14 +16,16 @@ export async function createStatistics() {
     await dbConnect();
     
     const users = await User.find({}, '_id').lean(); 
-
-
+    
+    
     for (const user of users) {
       const userId = user._id as string;
-
+      
       const lastWeekStart = dayjs().utc().subtract(1, 'week').startOf('isoWeek').toDate();
       const lastWeekEnd = dayjs().utc().subtract(1, 'week').endOf('isoWeek').toDate();
-  
+      
+      const habits = await Habit.find({ userId,   startDate: { $lte: lastWeekEnd } }).lean(); 
+
       let records = await Record.aggregate([
         {
           $match: {
@@ -55,6 +58,11 @@ export async function createStatistics() {
           }
         },
         {
+          $match: {
+            'habitDetails.startDate': { $lte: lastWeekEnd }
+          }
+        },
+        {
           $group: {
             _id: '$_id.habitId',
             weeks: {
@@ -81,17 +89,20 @@ export async function createStatistics() {
   
       records = calculateWeeklyCompletion(records);
   
-      const statisticPromises = records.map(async (record) => {
+      const statisticPromises = habits.map(async (habit) => {
+        const record = records
+          ?.find((record) => record.habitId === habit._id) 
+
         const existingStatistic = await Statistic.findOne({
-          habitId: record.habitId,
-          week: record.week
+          habitId: record?.habitId,
+          week: record?.week
         });
 
         if (!existingStatistic) {
           return Statistic.create({
-            week: record.week,
-            completion: record.completion,
-            habitId: record.habitId,
+            week: record.week || lastWeekStart,
+            completion: record?.completion || 0,
+            habitId: habit._id,
             userId: userId
           });
         }

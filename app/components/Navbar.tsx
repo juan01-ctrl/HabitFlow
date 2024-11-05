@@ -34,9 +34,6 @@ export default function Navbar() {
     } 
   ]
 
-
-  console.log(isAuthenticated)
-
   return (
     <NextNavbar className="bg-white text-black shadow-lg">
       <NavbarBrand className="text-black">
@@ -66,7 +63,7 @@ export default function Navbar() {
               <NavbarItem>
                 <ThemeSwitcher />
               </NavbarItem>
-              <NavbarItem className="hidden lg:flex">
+              <NavbarItem className="sm:flex">
                 <Button  color='primary' onClick={() => signOut()} >
                   Log Out
                 </Button>

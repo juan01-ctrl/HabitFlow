@@ -23,8 +23,20 @@ interface Props {
 
 export function HabitForm({ isOpen, onOpenChange, defaultData }: Props) {
   const action = defaultData ? 'Edit' : 'Create';
-  const { mutate: create } = useCreateHabit(onOpenChange);
-  const { mutate: update } = useUpdateHabit(onOpenChange);
+
+  const { register, handleSubmit, setValue, reset } = useForm<Partial<IHabit>>({
+    defaultValues: defaultData || { 
+      startDate: dayjs().toISOString()
+    }
+  });
+
+  const onSuccess = () => {
+    onOpenChange()
+    reset()
+  }
+
+  const { mutate: create } = useCreateHabit(onSuccess);
+  const { mutate: update } = useUpdateHabit(onSuccess);
 
   const mutate = defaultData 
     ? (data: IHabit) => {
@@ -33,18 +45,11 @@ export function HabitForm({ isOpen, onOpenChange, defaultData }: Props) {
     }
     : (data: IHabit) => create({ body: data })
 
-  const { register, handleSubmit, setValue } = useForm<IHabit>({
-    defaultValues: defaultData || {}
-  });
 
   const onSubmit = (data: IHabit) => {
-    console.log({categories: data?.categories})
-    const categories = data?.categories?.trim().split(',')
-    console.log(2, categories)
-    mutate({ ...data, categories });
+    mutate(data);
   }
 
-  console.log({ defaultData})
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
@@ -65,6 +70,11 @@ export function HabitForm({ isOpen, onOpenChange, defaultData }: Props) {
               label="Categories (separated by comma)" 
               placeholder="E.g., Health, Productivity, Personal" 
               {...register("categories")}
+              onChange={(e) => {
+                const value = e.target.value
+
+                setValue("categories", value?.trim().split(','))
+              }}
             />
             <DatePicker
               label="Start Date"
