@@ -126,7 +126,7 @@ export default function TrackingPage() {
             <TableHeader>
               <TableColumn>Habit</TableColumn>
               {
-                days?.map((day, idx) => {
+                typeof window !== 'undefined' ? days?.map((day, idx) => {
                   const weekDate = weekDates[idx];
                   const isCurrent = weekDate && dayjs(weekDate).isSame(currentDate.toISOString())
 
@@ -138,7 +138,7 @@ export default function TrackingPage() {
                       {day}
                     </TableColumn>
                   );
-                })
+                }) : null
               }
               <TableColumn>Completion (%)</TableColumn>
             </TableHeader>
