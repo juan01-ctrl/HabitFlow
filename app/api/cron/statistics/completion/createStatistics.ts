@@ -93,12 +93,15 @@ export async function createStatistics() {
       records = calculateWeeklyCompletion(records);
   
       const statisticPromises = habits.map(async (habit) => {
+        console.log({ habit, records, habitId: habit._id.toString()  })
         const record = records
-          ?.find((record) => record.habitId === habit._id) 
+          ?.find((record) => record.habitId.toString() === habit._id.toString()) 
+
+        console.log({record})
 
         const existingStatistic = await Statistic.findOne({
           habitId: record?.habitId,
-          week: record?.week
+          week: dayjs(record?.week).toDate()
         });
 
         if (!existingStatistic) {

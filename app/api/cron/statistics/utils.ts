@@ -9,7 +9,7 @@ interface Stats {
 export function calculateWeeklyCompletion(data): Stats[] {
   const completions: Stats[] = [];
 
-  data.forEach(habit => {
+  data.forEach((habit) => {
     const { _id: habitId, weeks, habitDetails } = habit;
     const { daysPerWeek } = habitDetails;
     const userId = habit.habitDetails?.userId;

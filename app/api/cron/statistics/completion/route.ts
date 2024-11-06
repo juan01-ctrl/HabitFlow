@@ -18,11 +18,11 @@ import { createStatistics } from './createStatistics';
 
 
 export async function GET(req: NextRequest) {
-  if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({
-      message: "Unauthorized."
-    }, { status: 401 });;
-  }
+  // if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+  //   return NextResponse.json({
+  //     message: "Unauthorized."
+  //   }, { status: 401 });;
+  // }
   try {
     console.log('Running scheduled statistics creation');
     const result = await createStatistics();

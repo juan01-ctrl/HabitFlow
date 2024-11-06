@@ -6,7 +6,7 @@ function Progress  () {
 
   return (
     <div className="container p-6">
-      <h1 className="mb-6">📈Progress!</h1>
+      <h1 className="mb-6">📈Progress</h1>
       <LineChartMultiple />
     </div>
   )

@@ -1,8 +1,6 @@
 "use client"
 
-import { Card, CardFooter, CardHeader }          from "@nextui-org/react"
-import dayjs                                     from "dayjs"
-import { TrendingUp }                            from "lucide-react"
+import { Card, CardHeader }                      from "@nextui-org/react"
 import { useIntl }                               from 'react-intl'
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
@@ -13,6 +11,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import dayjs from "@/utils/dayjsConfig"
 
 import { useGetStatistics } from "../hooks/use-get-statistics"
 
@@ -33,29 +32,54 @@ const chartConfig: ChartConfig = {
   //   label: "Desktop",
   //   color: "#000000",
   // },
-  // completion: {
-  //   label: "Completion",
-  //   color: "#000000",
-  // },
+  'test 1': {
+    label: "Completion",
+    color: "#010101",
+  },
 } satisfies ChartConfig
 
 export function LineChartMultiple() {
   const { formatNumber } = useIntl()
   const { data = [] } = useGetStatistics()
 
-  const tableData = data?.map((stat) => ({
-    ...stat,
-    week: `${dayjs(stat.week).format('DD-MMM')} - ${dayjs(stat.week).add(7, 'day').format('DD-MMM')}`
-  }))
+
+  const tableData = data?.map((stat) => {
+    const sortedHabits = Object.fromEntries(
+      stat?.habits
+        ?.map((habit) => [habit.name, habit.completion])
+        .sort(([, a], [, b]) => b - a) // Sort descending by completion
+    );
+  
+    const result = {
+      ...sortedHabits,
+      week: `${dayjs.utc(stat.week).format("DD-MMM")} - ${dayjs(stat.week)
+        .add(7, "day")
+        .format("DD-MMM")}`,
+    };
+  
+    return result;
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const keys = [...(new Set(data?.flatMap(({ week, ...rest }) => ( Object.keys(rest) ))))]
+  const keys = [...(new Set(tableData?.flatMap(({ week, ...rest }) => ( Object.keys(rest) ))))]
 
   console.log(keys)
 
 
 
 
+  const chartColors = [
+    '#1f77b4', 
+    '#ff7f0e', 
+    '#2ca02c', 
+    '#d62728', 
+    '#9467bd', 
+    '#8c564b', 
+    '#e377c2', 
+    '#7f7f7f', 
+    '#bcbd22', 
+    '#17becf'  
+  ];
   return (
     <Card>
       <CardHeader>
@@ -78,19 +102,24 @@ export function LineChartMultiple() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              // tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip 
+              className="bg-white"
               cursor={false} 
               content={<ChartTooltipContent 
-                formatter={(value, label) => `${label}: ${formatNumber(Number(value), { style: 'percent' })} `} />} 
+                formatter={(value, label, i) => <div className="flex gap-1 items-center">
+                  <div
+                    className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: i.color }}
+                  />
+                  {label}: {formatNumber(Number(value), { style: 'percent' })} 
+                </div>} />} 
             />
             {
-              keys?.map((key) =>  <Line
+              keys?.map((key, idx) =>  <Line
                 key={key}
                 dataKey={key}
                 type="monotone"
-                stroke="#000000"
+                stroke={chartColors[idx]}
                 strokeWidth={2}
                 dot={true}
               />)
@@ -99,18 +128,6 @@ export function LineChartMultiple() {
           </LineChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing total visitors for the last 6 months
-            </div>
-          </div>
-        </div>
-      </CardFooter>
     </Card>
   )
 }

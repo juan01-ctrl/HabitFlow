@@ -21,6 +21,7 @@ export async function GET() {
     }
 
     const statistics = await Statistic.find({ userId })
+      .sort('week')
       .populate('habitId', 'name daysPerWeek')
       .lean();
 
@@ -28,29 +29,27 @@ export async function GET() {
       return NextResponse.json({ message: 'No statistics found for this user.' }, { status: 404 });
     }
 
-    // Group statistics by week, with only one habit per week
     const groupedByWeek = statistics.reduce((acc, stat) => {
-      const week = stat.week.toISOString(); // Format week as a string
+      const week = stat.week.toISOString();
 
-      // Initialize the week entry if it doesn't exist
       if (!acc[week]) {
-        acc[week] = { week, habits: {} };
+        acc[week] = { week, habits: [] };
       }
 
-      // Add the habit to the week if it hasn't been added yet
       const habitName = stat.habitId.name;
-      if (!acc[week].habits[habitName]) {
-        acc[week].habits[habitName] = stat.completion;
-      }
+      const completion = stat.completion;
+
+      acc[week].habits.push({
+        name: habitName,
+        completion: completion,
+      });
 
       return acc;
     }, {});
 
-    // Convert grouped results to desired format
-    const result = Object.entries(groupedByWeek).map(([week, data]) => ({
-      week,
-      ...data?.habits,
-    }));
+    const result = Object.values(groupedByWeek).map((weekData) => {
+      return weekData;
+    });
 
     return NextResponse.json(result);
   } catch (error) {
