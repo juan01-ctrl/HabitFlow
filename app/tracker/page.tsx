@@ -122,6 +122,10 @@ export default function TrackingPage() {
               <ArrowRightIcon width={18} />
             </Button>
           </div>
+          {days?.map((d, idx) => (<span key={d}>
+            {idx} {d}
+            {dayjs(weekDates[idx]).isSame(currentDate.toISOString()) ? 'true' : 'false'}
+          </span>)) }
           <Table className='mt-4'>
             <TableHeader>
               <TableColumn>Habit</TableColumn>
