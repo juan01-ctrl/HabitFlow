@@ -7,8 +7,8 @@ import {
   Spinner,
   Button
 } from '@nextui-org/react';
-import dynamic                              from 'next/dynamic';
-import { ChangeEvent, useEffect, useState } from 'react';
+import dynamic                                        from 'next/dynamic';
+import { ChangeEvent, Fragment, useEffect, useState } from 'react';
 
 const DatePicker = dynamic(() => import('@nextui-org/react').then((mod) => mod.DatePicker), { ssr: false });
 
@@ -126,15 +126,19 @@ export default function TrackingPage() {
             <TableHeader>
               <TableColumn>Habit</TableColumn>
               {
-                days?.map((day, idx) => (
-                  <TableColumn 
-                    key={day}
-                    className={dayjs(weekDates[idx]).isSame(currentDate.toISOString()) ? 'bg-primary text-white' : ''}
-                  >
-                    {console.log('render',dayjs(weekDates[idx]).isSame(currentDate.toISOString()), { idx })}
-                    {day}
-                  </TableColumn>
-                ))
+                days?.map((day, idx) => {
+                  const weekDate = weekDates[idx];
+                  const isCurrent = weekDate && dayjs(weekDate).isSame(currentDate.toISOString())
+                  return (
+                    <Fragment key={day}>
+                      <TableColumn
+                        className={isCurrent ? 'bg-primary text-white' : ''}
+                      >
+                        {day}
+                      </TableColumn>
+                    </Fragment>
+                  );
+                })
               }
               <TableColumn>Completion (%)</TableColumn>
             </TableHeader>
