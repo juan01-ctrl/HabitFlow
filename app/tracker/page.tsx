@@ -31,7 +31,7 @@ const days = ['Mon','Tue','Wed','Thu','Fri', 'Sat', 'Sun'];
 export default function TrackingPage() {
   const [startOfWeek, setStartOfWeek] = useState(dayjs().startOf('isoWeek'));
   const [content, setContent] = useState('');
-  const [noteDate, setNoteDate] = useState(dayjs.utc().startOf('day').toISOString());
+  const [noteDate, setNoteDate] = useState(dayjs().startOf('day').toISOString());
   const [noteKey, setNoteKey] = useState(0);
   
 
@@ -83,11 +83,10 @@ export default function TrackingPage() {
 
   };
 
-  const currentDate = dayjs().startOf('day');
-  const weekDates = [...Array(7)].map((_, index) => startOfWeek.add(index, 'day').toISOString());
+  const currentDate = dayjs().startOf('day').local();
+  const weekDates = [...Array(7)].map((_, index) => startOfWeek.add(index, 'day').local().toISOString());
   const isLastWeek = currentDate.startOf('isoWeek').isSame(startOfWeek);
 
-  console.log(weekDates)
 
   const calculateCompletionPercentage = (habit: IGetHabitsResponseItem) => {
     console.log({ habit })
