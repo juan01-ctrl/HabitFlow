@@ -83,10 +83,9 @@ export default function TrackingPage() {
 
   };
 
-  const currentDate = dayjs().startOf('day').local();
-  const weekDates = [...Array(7)].map((_, index) => startOfWeek.add(index, 'day').local().toISOString());
+  const currentDate = dayjs().startOf('day');
+  const weekDates = [...Array(7)].map((_, index) => startOfWeek.add(index, 'day').toISOString());
   const isLastWeek = currentDate.startOf('isoWeek').isSame(startOfWeek);
-
 
   const calculateCompletionPercentage = (habit: IGetHabitsResponseItem) => {
     console.log({ habit })
@@ -102,6 +101,8 @@ export default function TrackingPage() {
   const handleNextWeek = () => {
     setStartOfWeek(startOfWeek.add(7, 'day'));
   };
+
+  console.log({weekDates, currentDate }, currentDate.local())
 
 
   return (
