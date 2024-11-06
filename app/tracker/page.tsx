@@ -103,7 +103,8 @@ export default function TrackingPage() {
   };
 
   console.log({weekDates, currentDate }, currentDate.local())
-
+  console.log(dayjs(weekDates[1]).isSame(currentDate.toISOString()) ) 
+  console.log(dayjs(weekDates[1])) 
 
   return (
     <div className='p-6 container'>
@@ -128,7 +129,7 @@ export default function TrackingPage() {
                 days?.map((day, idx) => (
                   <TableColumn 
                     key={day}
-                    className={dayjs(weekDates[idx]).isSame(currentDate) ? 'bg-primary text-white' : ''}
+                    className={dayjs(weekDates[idx]).isSame(currentDate.toISOString()) ? 'bg-primary text-white' : ''}
                   >
                     {day}
                   </TableColumn>
