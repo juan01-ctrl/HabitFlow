@@ -7,8 +7,8 @@ import {
   Spinner,
   Button
 } from '@nextui-org/react';
-import dynamic                                        from 'next/dynamic';
-import { ChangeEvent, Fragment, useEffect, useState } from 'react';
+import dynamic                              from 'next/dynamic';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 const DatePicker = dynamic(() => import('@nextui-org/react').then((mod) => mod.DatePicker), { ssr: false });
 
@@ -129,7 +129,7 @@ export default function TrackingPage() {
                 days?.map((day, idx) => {
                   const weekDate = weekDates[idx];
                   const isCurrent = weekDate && dayjs(weekDate).isSame(currentDate.toISOString())
-                  
+
                   return (
                     <TableColumn
                       key={day}
