@@ -131,6 +131,7 @@ export default function TrackingPage() {
                     key={day}
                     className={dayjs(weekDates[idx]).isSame(currentDate.toISOString()) ? 'bg-primary text-white' : ''}
                   >
+                    {console.log(1,dayjs(weekDates[idx]).isSame(currentDate.toISOString()), 2, weekDates[idx], currentDate)}
                     {day}
                   </TableColumn>
                 ))
