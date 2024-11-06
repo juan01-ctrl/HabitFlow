@@ -129,14 +129,14 @@ export default function TrackingPage() {
                 days?.map((day, idx) => {
                   const weekDate = weekDates[idx];
                   const isCurrent = weekDate && dayjs(weekDate).isSame(currentDate.toISOString())
+                  
                   return (
-                    <Fragment key={day}>
-                      <TableColumn
-                        className={isCurrent ? 'bg-primary text-white' : ''}
-                      >
-                        {day}
-                      </TableColumn>
-                    </Fragment>
+                    <TableColumn
+                      key={day}
+                      className={isCurrent ? 'bg-primary text-white' : ''}
+                    >
+                      {day}
+                    </TableColumn>
                   );
                 })
               }
