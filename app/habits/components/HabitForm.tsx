@@ -31,8 +31,6 @@ export function HabitForm({ isOpen, onOpenChange, defaultData }: Props) {
     defaultValues: {
       ...defaultData,
       categories: defaultData?.categories?.join(',') 
-    } || { 
-      startDate: dayjs().toISOString()
     }
   });
 
@@ -53,8 +51,16 @@ export function HabitForm({ isOpen, onOpenChange, defaultData }: Props) {
 
 
   const onSubmit = (data: DefaultData) => {
-    const categories = data?.categories?.split(',').map(item => item.trim())
-    const payload = { ...data, categories }
+    const categories = data?.categories?.split(',')
+      .map(item => item.trim())
+      .filter(Boolean)
+
+    console.log({data, categories})
+    const payload = { 
+      startDate: dayjs().toISOString(),
+      ...data,
+      categories
+    }
 
     mutate(payload);
   }

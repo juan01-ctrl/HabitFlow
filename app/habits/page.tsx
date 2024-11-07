@@ -128,7 +128,7 @@ export default function Habits() {
       </div>
       <Table aria-label="Example table with dynamic content">
         <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+          {(column) => <TableColumn key={column.key} align="center">{column.label}</TableColumn>}
         </TableHeader>
         <TableBody
           items={data || []}
@@ -144,11 +144,11 @@ export default function Habits() {
           loadingContent={<Spinner label='Loading...' />}
         >
           {(item) => (
-            <TableRow key={item._id}>
+            <TableRow  key={item._id}>
               {
                 (columnKey) => <TableCell>
                   {                 
-                    getFormattedValue(item, columnKey)
+                    getFormattedValue(item, columnKey) || '-'
                   }
                 </TableCell>
               }
