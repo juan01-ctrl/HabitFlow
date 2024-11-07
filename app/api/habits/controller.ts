@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 import Habit, { IHabit } from "@/app/models/Habit";
+import Record            from "@/app/models/Record";
 
 export async function createHabit(data: Partial<IHabit>) {
   const newHabit = await Habit.create(data);
@@ -40,7 +41,8 @@ export const updateHabit = async (_id: string, updates: Partial<IHabit>) => {
 };
 
 export const deleteHabit = async (_id: string) => {
-  const result = await Habit.deleteOne({ _id });
+  const result = await Habit.updateOne({ _id }, { deletedAt: new Date() });
+  await Record.deleteMany({ habitId: _id })
 
   return result;
 };

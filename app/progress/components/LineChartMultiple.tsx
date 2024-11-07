@@ -1,8 +1,8 @@
 "use client"
 
-import { Card, CardHeader, Spinner }             from "@nextui-org/react"
-import { useIntl }                               from 'react-intl'
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { Card, CardHeader, Spinner }                               from "@nextui-org/react"
+import { useIntl }                                                 from 'react-intl'
+import { CartesianGrid, Customized, Line, LineChart, Text, XAxis } from "recharts"
 
 import { CardContent, CardTitle } from "@/components/ui/card"
 import {
@@ -77,6 +77,21 @@ export function LineChartMultiple() {
                   right: 12,
                 }}
               >
+                <Customized
+                  component={() => {
+                    return !data?.length ? (
+                      <Text
+                        style={{ transform: `translate(50%, 50%)` }}
+                        x={0}
+                        y={-50}
+                        textAnchor="middle"
+                        verticalAnchor="middle"
+                      >
+                      You don&apos;t have any statistics yet. Every Monday the results from the previous week are added.
+                      </Text>
+                    ) : null;
+                  }}
+                />
                 <CartesianGrid vertical={false} />
                 <XAxis
                   dataKey="week"

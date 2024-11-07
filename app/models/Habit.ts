@@ -31,7 +31,8 @@ const habitSchema = new Schema({
   startDate: {
     type: Date, 
     required: true
-  }
+  },
+  deletedAt: Date
 }, { timestamps: true });
 
 const Habit = models?.Habit || model('Habit', habitSchema);

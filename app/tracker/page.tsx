@@ -8,12 +8,14 @@ import {
   Button
 } from '@nextui-org/react';
 import dynamic                              from 'next/dynamic';
+import Link                                 from 'next/link';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 const DatePicker = dynamic(() => import('@nextui-org/react').then((mod) => mod.DatePicker), { ssr: false });
 
 
-import dayjs from '@/utils/dayjsConfig';
+import { HABITS } from '@/enums/paths';
+import dayjs      from '@/utils/dayjsConfig';
 
 import { useGetHabits }           from '../habits/hooks/use-get-habits';
 import { IGetHabitsResponseItem } from '../habits/service';
@@ -141,7 +143,13 @@ export default function TrackingPage() {
             <TableBody 
               loadingContent={<Spinner label='Loading...' />}
               isLoading={isLoading}
-              emptyContent={"No habits to display."}
+              emptyContent={<span>
+                No habits to display. 
+                <Link
+                  href={HABITS.ROOT}
+                  className='text-primary cursor-pointer'
+                > Create one</Link>
+              </span>}
             >
               {(habits || [])?.map((habit) => {
                 const completionPercentage = Number(calculateCompletionPercentage(habit));

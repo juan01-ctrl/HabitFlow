@@ -10,9 +10,11 @@ import {
   Chip
 } from "@nextui-org/react";
 import dayjs from "dayjs";
+import Link  from "next/link";
 
 import {DeleteIcon} from "@/app/components/DeleteIcon";
 import {EditIcon}   from "@/app/components/EditIcon";
+import { HABITS }   from "@/enums/paths";
 
 import { DeleteHabitModal }       from "./components/DeleteHabitModal";
 import { HabitForm }              from "./components/HabitForm";
@@ -133,6 +135,14 @@ export default function Habits() {
         <TableBody
           items={data || []}
           isLoading={isFetching}
+          emptyContent={<span>
+            No habits to display. 
+            <span
+              onClick={onOpen}
+              className='text-primary cursor-pointer'
+            > Create one</span>
+          </span>
+          }
           loadingContent={<Spinner label='Loading...' />}
         >
           {(item) => (
