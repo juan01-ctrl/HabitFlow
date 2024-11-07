@@ -102,10 +102,6 @@ export default function TrackingPage() {
     setStartOfWeek(startOfWeek.add(7, 'day'));
   };
 
-  console.log({weekDates, currentDate }, currentDate.local())
-  console.log(dayjs(weekDates[1]).isSame(currentDate.toISOString()) ) 
-  console.log(dayjs(weekDates[1])) 
-
   return (
     <div className='p-6 container'>
       <div className='lg:flex gap-6'>
@@ -169,6 +165,7 @@ export default function TrackingPage() {
                             className={`${habit?.specificDays.includes(dayjs.utc(date).format('dddd')) ? 'bg-primary-100': ''}`}
                           >
                             <input
+                              disabled={!isLastWeek}
                               type="checkbox"
                               checked={record ? record?.completed : false}
                               onChange={(e) => handleCheckboxChange(e, habit, date)}
