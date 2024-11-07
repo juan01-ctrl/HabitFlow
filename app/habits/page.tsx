@@ -52,6 +52,7 @@ const columns = [
 ];
 
 function Actions  ({ habit }: { habit: IGetHabitsResponseItem }) {
+  console.log({ habit })
   const {
     isOpen: isOpenForm, onOpen: onOpenForm, onOpenChange: onOpenChangeForm
   } = useDisclosure()
@@ -76,7 +77,7 @@ function Actions  ({ habit }: { habit: IGetHabitsResponseItem }) {
           <DeleteIcon />
         </span>
       </Tooltip>
-      <HabitForm 
+      <HabitForm
         defaultData={habit}
         isOpen={isOpenForm}
         onOpenChange={onOpenChangeForm}

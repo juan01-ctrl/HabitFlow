@@ -3,7 +3,8 @@ import {
   Modal, ModalContent, ModalHeader, ModalBody, Button,
   Input, DatePicker
 } from "@nextui-org/react";
-import { useForm } from "react-hook-form"; 
+import { useEffect } from "react";
+import { useForm }   from "react-hook-form"; 
 
 import { IHabit } from "@/app/models/Habit";
 import dayjs      from '@/utils/dayjsConfig';
@@ -21,11 +22,16 @@ interface Props {
   defaultData?: Partial<IHabit>;
 }
 
+type DefaultData = Partial<Omit<IHabit, 'categories'> & { categories: string }>
+
 export function HabitForm({ isOpen, onOpenChange, defaultData }: Props) {
   const action = defaultData ? 'Edit' : 'Create';
 
-  const { register, handleSubmit, setValue, reset } = useForm<Partial<IHabit>>({
-    defaultValues: defaultData || { 
+  const { register, handleSubmit, setValue, reset } = useForm<DefaultData>({
+    defaultValues: {
+      ...defaultData,
+      categories: defaultData?.categories?.join(',') 
+    } || { 
       startDate: dayjs().toISOString()
     }
   });
@@ -46,9 +52,21 @@ export function HabitForm({ isOpen, onOpenChange, defaultData }: Props) {
     : (data: IHabit) => create({ body: data })
 
 
-  const onSubmit = (data: IHabit) => {
-    mutate(data);
+  const onSubmit = (data: DefaultData) => {
+    const categories = data?.categories?.split(',').map(item => item.trim())
+    const payload = { ...data, categories }
+
+    mutate(payload);
   }
+
+  useEffect(() => {
+    if (defaultData) {
+      reset({
+        ...defaultData,
+        categories: defaultData.categories?.join(',')
+      });
+    }
+  }, [defaultData, reset]);
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -70,25 +88,23 @@ export function HabitForm({ isOpen, onOpenChange, defaultData }: Props) {
               label="Categories (separated by comma)" 
               placeholder="E.g., Health, Productivity, Personal" 
               {...register("categories")}
-              onChange={(e) => {
-                const value = e.target.value
-
-                setValue("categories", value?.trim().split(','))
-              }}
             />
+            {
+              !defaultData &&
             <DatePicker
               label="Start Date"
               minValue={today(getLocalTimeZone())}
               defaultValue={parseDate(dayjs.utc(defaultData?.startDate).format("YYYY-MM-DD")) }
               onChange={(date) => setValue("startDate", dayjs(date).toDate())}
             />
+            }
             <DaysPerWeekSelect
               {...register("daysPerWeek")}
-              onChange={(data: string) => setValue("daysPerWeek", data)}
+              onChange={(data: number) => setValue("daysPerWeek", data)}
             />
             <WeekDaysSelect
               defaultValue={defaultData?.specificDays}
-              onChange={(data: string) => setValue("specificDays", data)}
+              onChange={(data: string[]) => setValue("specificDays", data)}
             />
             <Button type="submit" color="primary">
               {action}
