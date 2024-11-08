@@ -1,8 +1,11 @@
 "use client"
 
-import { Card, CardHeader, Spinner }                               from "@nextui-org/react"
-import { useIntl }                                                 from 'react-intl'
-import { CartesianGrid, Customized, Line, LineChart, Text, XAxis } from "recharts"
+import { Card, CardHeader, Spinner } from "@nextui-org/react"
+import { useIntl }                   from 'react-intl'
+import {
+  CartesianGrid, Customized, Legend, Line,
+  LineChart, Text, XAxis, YAxis
+} from "recharts"
 
 import { CardContent, CardTitle } from "@/components/ui/card"
 import {
@@ -40,14 +43,14 @@ export function LineChartMultiple() {
 
 
   const tableData = data?.map((stat) => {
-    const sortedHabits = Object.fromEntries(
+    
+    const habits = Object.fromEntries(
       stat?.habits
         ?.map((habit) => [habit.name, habit.completion])
-        .sort(([, a], [, b]) => b - a) // Sort descending by completion
     );
-  
+
     const result = {
-      ...sortedHabits,
+      ...habits,
       week: `${dayjs.utc(stat.week).format("DD-MMM")} - ${dayjs(stat.week)
         .add(7, "day")
         .format("DD-MMM")}`,
@@ -64,7 +67,7 @@ export function LineChartMultiple() {
       <CardHeader>
         <CardTitle className="mb-4">Your progress  (by week)</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0 pb-3 pe-4">
         {
           isLoading ? <div  className="w-100 flex items-center justify-center"> <Spinner /></div>
             : <ChartContainer config={chartConfig}>
@@ -73,8 +76,9 @@ export function LineChartMultiple() {
                 style={{ fontWeight: 'bold' }}
                 data={tableData}
                 margin={{
-                  left: 12,
-                  right: 12,
+                  top: 12,
+                  left: 0,
+                  right: 20,
                 }}
               >
                 <Customized
@@ -99,6 +103,9 @@ export function LineChartMultiple() {
                   axisLine={false}
                   tickMargin={8}
                 />
+                <YAxis
+                  tickFormatter={(value) => formatNumber(Number(value), { style: 'percent' })}
+                />
                 <ChartTooltip 
                   className="bg-white"
                   cursor={false} 
@@ -109,7 +116,8 @@ export function LineChartMultiple() {
                       />
                       {label}: {formatNumber(Number(value), { style: 'percent' })} 
                     </div>} />} 
-                />
+                />  
+                <Legend iconSize={14} wrapperStyle={{ paddingTop: "10px" }} />
                 {
                   keys?.map((key, idx) =>  <Line
                     key={key}
