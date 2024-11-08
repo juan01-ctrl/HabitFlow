@@ -215,7 +215,7 @@ export default function TrackingPage() {
           {
             isLoadingNote
               ? <div className='py-4 w-100 flex justify-center items-center'><Spinner /></div> 
-              : <TextBox isLoading={isLoadingUpdateNote} content={content} setContent={setContent} />
+              : <TextBox note={note} isLoading={isLoadingUpdateNote} content={content} setContent={setContent} />
           }
         </div>
       </div>

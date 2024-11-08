@@ -147,7 +147,7 @@ const extensions = [
 ]
 
 
-export default function TextBox ({ content, setContent, isLoading }) {
+export default function TextBox ({ content, setContent, isLoading, note }) {
   const defaultContent = `<p className="opacity-50">Anything else I want to remember?...</p>`
   
   const editor = useEditor({
@@ -159,8 +159,10 @@ export default function TextBox ({ content, setContent, isLoading }) {
   });
 
   useEffect(() => {
-    editor?.commands.setContent(content)
-  }, [content])
+    if (note?.content){
+      editor?.commands.setContent(note.content)
+    }
+  }, [note, editor])
 
 
   return (
