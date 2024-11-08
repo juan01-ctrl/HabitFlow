@@ -45,7 +45,7 @@ export default function TrackingPage() {
   const { mutate: updateRecord } = useUpdateRecord(refetchHabits)
   const { mutate: createRecord } = useCreateRecord(refetchHabits)
   
-  const { mutate: updateNote, isPending: isLoadingUpdateNote } = useUpdateNote(refetchNote)
+  const { mutate: updateNote, isPending: isLoadingUpdateNote } = useUpdateNote()
   const { mutate: createNote } = useCreateNote(refetchNote)
 
   useEffect(() => {
