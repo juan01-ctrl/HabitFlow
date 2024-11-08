@@ -12,7 +12,7 @@ export const getHabits = async (userId: string) => {
   const objectIdUserId = new Types.ObjectId(userId);
 
   const habits = await Habit.aggregate([
-    { $match: { userId: objectIdUserId } },
+    { $match: { userId: objectIdUserId, deletedAt: { $exists: false } } },
     {
       $lookup: {
         from: 'records',         

@@ -1,15 +1,17 @@
 'use client';
 
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
-import { getLocalTimeZone, today }       from '@internationalized/date';
+import { ArrowLeftIcon, ArrowRightIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
+import { getLocalTimeZone, today }                              from '@internationalized/date';
 import { 
   Table, TableColumn, TableHeader, TableBody, TableRow, TableCell,
   Spinner,
-  Button
+  Button,
+  Checkbox,
+  Tooltip
 } from '@nextui-org/react';
-import dynamic                              from 'next/dynamic';
-import Link                                 from 'next/link';
-import { ChangeEvent, useEffect, useState } from 'react';
+import dynamic                  from 'next/dynamic';
+import Link                     from 'next/link';
+import {  useEffect, useState } from 'react';
 
 const DatePicker = dynamic(() => import('@nextui-org/react').then((mod) => mod.DatePicker), { ssr: false });
 
@@ -34,7 +36,6 @@ export default function TrackingPage() {
   const [startOfWeek, setStartOfWeek] = useState(dayjs().startOf('isoWeek'));
   const [content, setContent] = useState('');
   const [noteDate, setNoteDate] = useState(dayjs().startOf('day').toISOString());
-  const [noteKey, setNoteKey] = useState(0);
   
 
   const debouncedValue = useDebounced(content, 500) as string
@@ -50,7 +51,6 @@ export default function TrackingPage() {
   useEffect(() => {
     const noteContent = note?.content || ''
 
-    setNoteKey((prev) => prev + 1);
     setContent(noteContent)
   }, [note])
 
@@ -67,9 +67,8 @@ export default function TrackingPage() {
   
 
   const handleCheckboxChange = (
-    e: ChangeEvent<HTMLInputElement>, habit: IGetHabitsResponseItem, date: Date
+    completed: boolean, habit: IGetHabitsResponseItem, date: Date
   ) => {
-    const completed = e.target.checked;
 
     const record = habit.records.find((record) => dayjs(record.date).isSame(date));
     console.log({ record, records: habit.records, date })
@@ -90,7 +89,6 @@ export default function TrackingPage() {
   const isLastWeek = currentDate.startOf('isoWeek').isSame(startOfWeek);
 
   const calculateCompletionPercentage = (habit: IGetHabitsResponseItem) => {
-    console.log({ habit })
     const target = habit?.daysPerWeek || 0; 
     const completedDays = (habit?.records || [])
       .filter((record) => record.completed && weekDates.includes(dayjs(record.date).startOf('day').toISOString())).length; 
@@ -162,7 +160,20 @@ export default function TrackingPage() {
                 }
                 return (
                   <TableRow key={habit._id}>
-                    <TableCell>{habit.name}</TableCell>
+                    <TableCell className='flex gap-1'>
+                      {habit.name}
+                      <Tooltip content={
+                        <>
+                          {
+                            habit?.description &&
+                            <span>Description: {habit.description}</span>
+                          }
+                          <span>Days per week: {habit.daysPerWeek}</span>
+                        </>
+                      }>
+                        <InformationCircleIcon width={16} />
+                      </Tooltip>
+                    </TableCell>
                     {
                       weekDates.map((date) => {
                         const record = habit.records.find((record) => dayjs(record.date).startOf('day').isSame(date));
@@ -172,11 +183,10 @@ export default function TrackingPage() {
                             key={date}
                             className={`${habit?.specificDays.includes(dayjs.utc(date).format('dddd')) ? 'bg-primary-100': ''}`}
                           >
-                            <input
-                              disabled={!isLastWeek}
-                              type="checkbox"
-                              checked={record ? record?.completed : false}
-                              onChange={(e) => handleCheckboxChange(e, habit, date)}
+                            <Checkbox 
+                              isDisabled={!isLastWeek}
+                              isSelected={record ? record?.completed : false}
+                              onValueChange={(selected) => handleCheckboxChange(selected, habit, date)}
                             />
                           </TableCell>
                         );
@@ -205,7 +215,7 @@ export default function TrackingPage() {
           {
             isLoadingNote
               ? <div className='py-4 w-100 flex justify-center items-center'><Spinner /></div> 
-              : <TextBox isLoading={isLoadingUpdateNote} key={noteKey} content={content} setContent={setContent} />
+              : <TextBox isLoading={isLoadingUpdateNote} content={content} setContent={setContent} />
           }
         </div>
       </div>

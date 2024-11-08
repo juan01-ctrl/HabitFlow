@@ -1,18 +1,18 @@
 // import './styles.scss'
 
-import {MinusCircleIcon, PlusCircleIcon }   from '@heroicons/react/24/outline'
-import { CheckCircleIcon }                  from '@heroicons/react/24/solid'
-import { Button }                           from '@nextui-org/button'
-import { Spinner }                          from '@nextui-org/react'
-import BulletList                           from '@tiptap/extension-bullet-list'
-import { Color }                            from '@tiptap/extension-color'
-import ListItem                             from '@tiptap/extension-list-item'
-import OrderedList                          from '@tiptap/extension-ordered-list'
-import TextStyle                            from '@tiptap/extension-text-style'
-import { EditorProvider, useCurrentEditor } from '@tiptap/react'
-import StarterKit                           from '@tiptap/starter-kit'
-import { useTheme }                         from 'next-themes'
-import React, {  useState }                 from 'react'
+import { MinusCircleIcon, PlusCircleIcon }                            from '@heroicons/react/24/outline'
+import { CheckCircleIcon }                                            from '@heroicons/react/24/solid'
+import { Button }                                                     from '@nextui-org/button'
+import { Spinner }                                                    from '@nextui-org/react'
+import BulletList                                                     from '@tiptap/extension-bullet-list'
+import { Color }                                                      from '@tiptap/extension-color'
+import ListItem                                                       from '@tiptap/extension-list-item'
+import OrderedList                                                    from '@tiptap/extension-ordered-list'
+import TextStyle                                                      from '@tiptap/extension-text-style'
+import { EditorContent, EditorProvider, useCurrentEditor, useEditor } from '@tiptap/react'
+import StarterKit                                                     from '@tiptap/starter-kit'
+import { useTheme }                                                   from 'next-themes'
+import  {  useEffect, useRef, useState }                              from 'react'
 
 
 const MenuBar = () => {
@@ -149,16 +149,25 @@ const extensions = [
 
 export default function TextBox ({ content, setContent, isLoading }) {
   const defaultContent = `<p className="opacity-50">Anything else I want to remember?...</p>`
+  
+  const editor = useEditor({
+    content: content || defaultContent,
+    extensions: extensions,
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML());
+    },
+  });
+
+  useEffect(() => {
+    editor?.commands.setContent(content)
+  }, [content])
+
 
   return (
     <div className='my-6 rounded-lg relative'>
-      <EditorProvider
-        slotBefore={<MenuBar />} 
-        extensions={extensions}
-        onUpdate={({ editor }) => {
-          setContent(editor.getHTML())
-        }}
-        content={content || defaultContent}
+      <EditorContent 
+        slotBefore={<MenuBar />}
+        editor={editor} 
       />
       <div className='absolute right-2' style={{ bottom: '270px'}}>
         { 
