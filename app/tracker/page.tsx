@@ -160,8 +160,8 @@ export default function TrackingPage() {
                 }
                 return (
                   <TableRow key={habit._id}>
-                    <TableCell className='flex gap-1'>
-                      {habit.name}
+                    <TableCell className='flex gap-1 items-center'>
+                      <span> {habit.name}</span>
                       <Tooltip content={
                         <>
                           {
